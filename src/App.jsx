@@ -6,6 +6,8 @@ import './App.css'
 import "./Styles/ListProducts.css"
 import "./Styles/NewProduct.css"
 import "./Styles/StoreSelector.css"
+import "./Styles/CategorySelector.css"
+
 export const App = () =>{
   return (
     <div className='hero'>

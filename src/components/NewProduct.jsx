@@ -2,6 +2,7 @@ import React from 'react';
 import { useContext } from 'react';
 import { ContextMarket } from '../Context/Context';
 import md5 from 'md5'; // importante instalar la dependencia md5 para la creacion el id: npm install md5
+import { CategorySelector } from './CategorySelector ';
 
 export const NewProduct = () => {
     const {
@@ -14,22 +15,27 @@ export const NewProduct = () => {
         products,
         SetProducts,
         selectedStore,
-        stores
+        selectedCategory
     } = useContext(ContextMarket);
-    
+   
     const handleProduct = (e) => {
         e.preventDefault();
-        
+       
         if (!selectedStore) {
             alert("Por favor, selecciona una tienda antes de agregar un producto");
             return;
         }
         
+        if (!selectedCategory) {
+            alert("Por favor, selecciona una categoría antes de agregar un producto");
+            return;
+        }
+       
         // Generar ID único con md5
         const timestamp = Date.now();
         const idString = `${NameProduct}-${PriceProduct}-${timestamp}`;
         const id = md5(idString);
-        
+       
         // Obtener la fecha actual completa en formato legible
         const currentDate = new Date();
         const formattedDate = currentDate.toLocaleDateString('es-ES', {
@@ -37,33 +43,36 @@ export const NewProduct = () => {
             month: 'long',
             day: 'numeric'
         });
-        
+       
         const newProduct = {
             id: id,
             name: NameProduct,
             price: Number(PriceProduct),
             date: formattedDate,
             timestamp: currentDate.getTime(),
-            storeId: selectedStore.id, // aqui asociamos la tienda al producto
-            storeName: selectedStore.name // guardamos el nombre de la tienda para facilitar la visualización
+            storeId: selectedStore.id, // asociamos la tienda al producto
+            storeName: selectedStore.name, // guardamos el nombre de la tienda para facilitar la visualización
+            categoryId: selectedCategory.id, // asociamos la categoría al producto
+            categoryName: selectedCategory.name // guardamos el nombre de la categoría
         };
-        
+       
         SetProducts([...products, newProduct]);
-        
+       
         // Limpiar el formulario
         SetNameProduct("");
         SetPriceProduct("");
         SetDateProduct("");
         e.target.reset();
     };
-    
+   
     return (
         <>
             <form className="container" onSubmit={handleProduct}>
                 <h2>Agregar producto</h2>
-                {!selectedStore && (
-                    <p className="store-warning">⚠️ Selecciona una tienda antes de agregar productos</p>
-                )}
+
+
+<CategorySelector/>
+                
                 <input
                     type="text"
                     placeholder="Nombre del producto"

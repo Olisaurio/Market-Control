@@ -115,3 +115,26 @@
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
+
+.product-category {
+  color: #4caf50;
+}
+
+.filter-sort-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.filter-controls, .sort-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.filter-select, .sort-select {
+  padding: 5px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+}

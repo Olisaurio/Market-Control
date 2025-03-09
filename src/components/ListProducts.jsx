@@ -3,9 +3,10 @@ import { ContextMarket } from "../Context/Context";
 import md5 from "md5";
 
 export const ListProducts = () => {
-  const { products, total, setTotal, SetProducts, selectedStore } = useContext(ContextMarket);
+  const { products, total, setTotal, SetProducts, selectedStore, selectedCategory } = useContext(ContextMarket);
   const [sortType, setSortType] = useState("none");
-
+  const [filterCategory, setFilterCategory] = useState("all");
+  
   // Obtener fecha actual formateada
   const getCurrentDate = () => {
     const today = new Date();
@@ -60,9 +61,19 @@ export const ListProducts = () => {
         }
         return new Date(a.date) - new Date(b.date);
       });
+    } else if (type === "category") {
+      sortedProducts.sort((a, b) => (a.categoryName || "").localeCompare(b.categoryName || ""));
     }
 
     SetProducts(sortedProducts);
+  };
+
+  // Filtrar productos por categoría
+  const getFilteredProducts = () => {
+    if (filterCategory === "all") {
+      return products;
+    }
+    return products.filter(product => product.categoryId === parseInt(filterCategory));
   };
 
   useEffect(() => {
@@ -83,42 +94,62 @@ export const ListProducts = () => {
     totalProducts();
   }, [products]);
 
+  // Obtener categorías únicas para el filtro
+  const uniqueCategories = [...new Set(products
+    .filter(product => product.categoryId)
+    .map(product => ({ id: product.categoryId, name: product.categoryName })))];
+
   return (
     <>
       <div className="aside">
         <h2>Lista de productos - {getCurrentDate()}</h2>
 
-        {selectedStore ? (
-          <div className="store-info">
-            Tienda: <strong>{selectedStore.name}</strong>
-          </div>
-        ) : (
-          <div className="store-warning">
-            No has seleccionado ninguna tienda
-          </div>
-        )}
 
-        <div className="sort-controls">
-          <label>Ordenar por: </label>
-          <select
-            value={sortType}
-            onChange={(e) => sortProducts(e.target.value)}
-            className="sort-select"
-          >
-            <option value="none">Sin ordenar</option>
-            <option value="name">Nombre (A-Z)</option>
-            <option value="price-asc">Precio (menor a mayor)</option>
-            <option value="price-desc">Precio (mayor a menor)</option>
-            <option value="date-newest">Fecha (más reciente primero)</option>
-            <option value="date-oldest">Fecha (más antigua primero)</option>
-          </select>
+
+
+
+        <div className="filter-sort-controls">
+          <div className="sort-controls">
+            <label>Ordenar por: </label>
+            <select
+              value={sortType}
+              onChange={(e) => sortProducts(e.target.value)}
+              className="sort-select"
+            >
+              <option value="none">Sin ordenar</option>
+              <option value="name">Nombre (A-Z)</option>
+              <option value="price-asc">Precio (menor a mayor)</option>
+              <option value="price-desc">Precio (mayor a menor)</option>
+              <option value="date-newest">Fecha (más reciente primero)</option>
+              <option value="date-oldest">Fecha (más antigua primero)</option>
+              <option value="category">Categoría</option>
+            </select>
+          </div>
+
+          {uniqueCategories.length > 0 && (
+            <div className="filter-controls">
+              <label>Filtrar por categoría: </label>
+              <select
+                value={filterCategory}
+                onChange={(e) => setFilterCategory(e.target.value)}
+                className="filter-select"
+              >
+                <option value="all">Todas las categorías</option>
+                {uniqueCategories.map(category => (
+                  <option key={category.id} value={category.id}>
+                    {category.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
         </div>
 
         {products.length === 0 ? (
           <p className="empty-message">No hay productos en la lista</p>
         ) : (
           <ul>
-            {products.map((product) => (
+            {getFilteredProducts().map((product) => (
               <li key={product.id} className="product-item">
                 <div className="product-info">
                   <strong>{product.name}</strong>
@@ -129,6 +160,12 @@ export const ListProducts = () => {
                     <span className="product-store">
                       <br />
                       Tienda: {product.storeName}
+                    </span>
+                  )}
+                  {product.categoryName && (
+                    <span className="product-category">
+                      <br />
+                      Categoría: {product.categoryName}
                     </span>
                   )}
                   <br />
