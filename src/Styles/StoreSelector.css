@@ -1,0 +1,106 @@
+/* Estilos para el formulario de agregar tienda */
+.add-store-form {
+  display: flex;
+  margin-bottom: 15px;
+  gap: 10px;
+}
+
+.store-input {
+  flex-grow: 1;
+  padding: 10px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.store-input:focus {
+  border-color: #4dabf7;
+  box-shadow: 0 0 0 3px rgba(77, 171, 247, 0.2);
+  outline: none;
+}
+
+.add-store-button {
+  padding: 10px 15px;
+  background-color: #4dabf7;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.add-store-button:hover {
+  background-color: #339af0;
+}
+
+/* Estilos para los mensajes */
+.error-message {
+  background-color: #ffe3e3;
+  color: #e03131;
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  font-size: 0.9rem;
+}
+
+.success-message {
+  background-color: #e6f7e9;
+  color: #2b8a3e;
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  font-size: 0.9rem;
+}
+
+.no-stores-message {
+  text-align: center;
+  color: #868e96;
+  font-style: italic;
+  padding: 15px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+}
+
+/* Modificación de los items de tienda */
+.store-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0;
+  overflow: hidden;
+}
+
+.store-name {
+  padding: 10px 15px;
+  flex-grow: 1;
+  cursor: pointer;
+}
+
+.delete-store-button {
+  background-color: transparent;
+  color: #868e96;
+  border: none;
+  padding: 10px 15px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.delete-store-button:hover {
+  background-color: #ff6b6b;
+  color: white;
+}
+
+.store-item.selected .delete-store-button {
+  color: white;
+}
+
+.store-item.selected .delete-store-button:hover {
+  background-color: #fa5252;
+}

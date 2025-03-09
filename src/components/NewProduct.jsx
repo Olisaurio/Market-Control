@@ -12,22 +12,29 @@ export const NewProduct = () => {
         DateProduct,
         SetDateProduct,
         products,
-        SetProducts
+        SetProducts,
+        selectedStore,
+        stores
     } = useContext(ContextMarket);
-
+    
     const handleProduct = (e) => {
         e.preventDefault();
         
-        // aqui generamos el ID único con md5
+        if (!selectedStore) {
+            alert("Por favor, selecciona una tienda antes de agregar un producto");
+            return;
+        }
+        
+        // Generar ID único con md5
         const timestamp = Date.now();
         const idString = `${NameProduct}-${PriceProduct}-${timestamp}`;
         const id = md5(idString);
         
-        // Obtener la fecha actual
+        // Obtener la fecha actual completa en formato legible
         const currentDate = new Date();
         const formattedDate = currentDate.toLocaleDateString('es-ES', {
-            year: 'numeric', 
-            month: 'long', 
+            year: 'numeric',
+            month: 'long',
             day: 'numeric'
         });
         
@@ -36,7 +43,9 @@ export const NewProduct = () => {
             name: NameProduct,
             price: Number(PriceProduct),
             date: formattedDate,
-            timestamp: currentDate.getTime() // Guardamos el timestamp para ordenamiento
+            timestamp: currentDate.getTime(),
+            storeId: selectedStore.id, // aqui asociamos la tienda al producto
+            storeName: selectedStore.name // guardamos el nombre de la tienda para facilitar la visualización
         };
         
         SetProducts([...products, newProduct]);
@@ -44,22 +53,26 @@ export const NewProduct = () => {
         // Limpiar el formulario
         SetNameProduct("");
         SetPriceProduct("");
+        SetDateProduct("");
         e.target.reset();
     };
-
+    
     return (
         <>
             <form className="container" onSubmit={handleProduct}>
                 <h2>Agregar producto</h2>
-                <input 
-                    type="text" 
+                {!selectedStore && (
+                    <p className="store-warning">⚠️ Selecciona una tienda antes de agregar productos</p>
+                )}
+                <input
+                    type="text"
                     placeholder="Nombre del producto"
                     onChange={(event) => SetNameProduct(event.target.value)}
                     value={NameProduct}
                     required
                 />
-                <input 
-                    type="number" 
+                <input
+                    type="number"
                     placeholder="Precio"
                     onChange={(event) => SetPriceProduct(event.target.value)}
                     value={PriceProduct}

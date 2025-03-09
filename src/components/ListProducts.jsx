@@ -3,7 +3,7 @@ import { ContextMarket } from "../Context/Context";
 import md5 from "md5";
 
 export const ListProducts = () => {
-  const { products, total, setTotal, SetProducts } = useContext(ContextMarket);
+  const { products, total, setTotal, SetProducts, selectedStore } = useContext(ContextMarket);
   const [sortType, setSortType] = useState("none");
 
   // Obtener fecha actual formateada
@@ -88,6 +88,16 @@ export const ListProducts = () => {
       <div className="aside">
         <h2>Lista de productos - {getCurrentDate()}</h2>
 
+        {selectedStore ? (
+          <div className="store-info">
+            Tienda: <strong>{selectedStore.name}</strong>
+          </div>
+        ) : (
+          <div className="store-warning">
+            No has seleccionado ninguna tienda
+          </div>
+        )}
+
         <div className="sort-controls">
           <label>Ordenar por: </label>
           <select
@@ -114,15 +124,13 @@ export const ListProducts = () => {
                   <strong>{product.name}</strong>
                   <br />${product.price.toFixed(2)}
                   <br />
-                  <span className="product-date">
-                    Fecha:{" "}
-                    {product.timestamp
-                      ? new Date(product.timestamp).toLocaleDateString(
-                          "es-ES",
-                          { day: "numeric", month: "long", year: "numeric" }
-                        )
-                      : product.date}
-                  </span>
+                  <span className="product-date">Fecha: {product.date}</span>
+                  {product.storeName && (
+                    <span className="product-store">
+                      <br />
+                      Tienda: {product.storeName}
+                    </span>
+                  )}
                   <br />
                   <small className="product-id">
                     ID: {product.id.substring(0, 8)}...

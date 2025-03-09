@@ -1,14 +1,18 @@
 import { useEffect, useState } from 'react'
 import { ListProducts } from './components/ListProducts'
 import { NewProduct } from './components/NewProduct'
+import { StoreSelector } from './components/StoreSelector';
 import './App.css'
 import "./Styles/ListProducts.css"
 import "./Styles/NewProduct.css"
+import "./Styles/StoreSelector.css"
 export const App = () =>{
   return (
     <div className='hero'>
     <NewProduct/>
+    <StoreSelector />
     <ListProducts/>
+
 
     </div>
   )
