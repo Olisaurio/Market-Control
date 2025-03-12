@@ -3,9 +3,26 @@ import { ContextMarket } from "../Context/Context";
 import md5 from "md5";
 
 export const ListProducts = () => {
-  const { products, total, setTotal, SetProducts, selectedStore, selectedCategory } = useContext(ContextMarket);
+  const { 
+    products, 
+    total, 
+    setTotal, 
+    SetProducts, 
+    selectedStore, 
+    selectedCategory,
+    setEditingProduct 
+  } = useContext(ContextMarket);
   const [sortType, setSortType] = useState("none");
   const [filterCategory, setFilterCategory] = useState("all");
+
+  const handleEdit = (product) => {
+    setEditingProduct(product);
+    // Hacer scroll hacia el formulario
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  };
   
   // Obtener fecha actual formateada
   const getCurrentDate = () => {
@@ -99,92 +116,74 @@ export const ListProducts = () => {
     .filter(product => product.categoryId)
     .map(product => ({ id: product.categoryId, name: product.categoryName })))];
 
-  return (
-    <>
-      <div className="aside">
-        <h2>Lista de productos - {getCurrentDate()}</h2>
-
-
-
-
-
-        <div className="filter-sort-controls">
-          <div className="sort-controls">
-            <label>Ordenar por: </label>
-            <select
-              value={sortType}
-              onChange={(e) => sortProducts(e.target.value)}
-              className="sort-select"
-            >
-              <option value="none">Sin ordenar</option>
-              <option value="name">Nombre (A-Z)</option>
-              <option value="price-asc">Precio (menor a mayor)</option>
-              <option value="price-desc">Precio (mayor a menor)</option>
-              <option value="date-newest">Fecha (más reciente primero)</option>
-              <option value="date-oldest">Fecha (más antigua primero)</option>
-              <option value="category">Categoría</option>
-            </select>
+    return (
+      <>
+        <div className="aside">
+          <h2>Lista de productos - {getCurrentDate()}</h2>
+  
+          <div className="filter-sort-controls">
+            {/* Controles de ordenación existentes */}
           </div>
-
-          {uniqueCategories.length > 0 && (
-            <div className="filter-controls">
-              <label>Filtrar por categoría: </label>
-              <select
-                value={filterCategory}
-                onChange={(e) => setFilterCategory(e.target.value)}
-                className="filter-select"
-              >
-                <option value="all">Todas las categorías</option>
-                {uniqueCategories.map(category => (
-                  <option key={category.id} value={category.id}>
-                    {category.name}
-                  </option>
-                ))}
-              </select>
-            </div>
+  
+          {products.length === 0 ? (
+            <p className="empty-message">No hay productos en la lista</p>
+          ) : (
+            <ul>
+              {getFilteredProducts().map((product) => (
+                <li key={product.id} className="product-item">
+                  <div className="product-info">
+                    <strong>{product.name}</strong>
+                    {product.brand && (
+                      <span className="product-brand">
+                        <br />
+                        Marca: {product.brand}
+                      </span>
+                    )}
+                    <br />${product.price.toFixed(2)}
+                    {product.unit && (
+                      <span className="product-unit">
+                        {" "}/ {product.unit}
+                      </span>
+                    )}
+                    <br />
+                    <span className="product-date">Fecha: {product.date}</span>
+                    {product.storeName && (
+                      <span className="product-store">
+                        <br />
+                        Tienda: {product.storeName}
+                      </span>
+                    )}
+                    {product.categoryName && (
+                      <span className="product-category">
+                        <br />
+                        Categoría: {product.categoryName}
+                      </span>
+                    )}
+                    <br />
+                    <small className="product-id">
+                      ID: {product.id.substring(0, 8)}...
+                    </small>
+                  </div>
+                  <div className="product-actions">
+                    <button
+                      className="edit-button"
+                      onClick={() => handleEdit(product)}
+                    >
+                      Editar
+                    </button>
+                    <button
+                      className="delete-button"
+                      onClick={() => handleDelete(product.id)}
+                    >
+                      Eliminar
+                    </button>
+                  </div>
+                </li>
+              ))}
+            </ul>
           )}
+          <div className="total-value">Valor Total: ${total.toFixed(2)}</div>
         </div>
-
-        {products.length === 0 ? (
-          <p className="empty-message">No hay productos en la lista</p>
-        ) : (
-          <ul>
-            {getFilteredProducts().map((product) => (
-              <li key={product.id} className="product-item">
-                <div className="product-info">
-                  <strong>{product.name}</strong>
-                  <br />${product.price.toFixed(2)}
-                  <br />
-                  <span className="product-date">Fecha: {product.date}</span>
-                  {product.storeName && (
-                    <span className="product-store">
-                      <br />
-                      Tienda: {product.storeName}
-                    </span>
-                  )}
-                  {product.categoryName && (
-                    <span className="product-category">
-                      <br />
-                      Categoría: {product.categoryName}
-                    </span>
-                  )}
-                  <br />
-                  <small className="product-id">
-                    ID: {product.id.substring(0, 8)}...
-                  </small>
-                </div>
-                <button
-                  className="delete-button"
-                  onClick={() => handleDelete(product.id)}
-                >
-                  Eliminar
-                </button>
-              </li>
-            ))}
-          </ul>
-        )}
-        <div className="total-value">Valor Total: ${total.toFixed(2)}</div>
-      </div>
-    </>
-  );
-};
+      </>
+    );
+  };

@@ -5,10 +5,13 @@ export const ContextMarket = createContext();
 export const ProviderMarket = ({children}) => {
     // Estados existentes
     const [NameProduct, SetNameProduct] = useState("")
+    const [BrandProduct, SetBrandProduct] = useState("") // Nuevo estado para marca
     const [PriceProduct, SetPriceProduct] = useState("")
+    const [UnitProduct, SetUnitProduct] = useState("") // Nuevo estado para unidad de medida
     const [DateProduct, SetDateProduct] = useState("")
     const [products, SetProducts] = useState([])
     const [total, setTotal] = useState(0)
+    const [editingProduct, setEditingProduct] = useState(null) // Para edición de productos
     
     // Estados para tiendas
     const [stores, setStores] = useState([
@@ -98,14 +101,20 @@ export const ProviderMarket = ({children}) => {
             // Valores existentes
             NameProduct,
             SetNameProduct,
+            BrandProduct,
+            SetBrandProduct,
             PriceProduct,
             SetPriceProduct,
+            UnitProduct,
+            SetUnitProduct,
             DateProduct,
             SetDateProduct,
             products,
             SetProducts,
             total,
             setTotal,
+            editingProduct,
+            setEditingProduct,
             // Valores y funciones para tiendas
             stores,
             setStores,
