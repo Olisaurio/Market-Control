@@ -8,37 +8,30 @@ import { StoreSelector } from './components/StoreSelector';
 import { CategorySelector } from './components/CategorySelector';
 import { PriceComparison } from './components/PriceComparison';
 import { MonthlySummary } from './components/MonthlySummary';
-
-// Importa los estilos CSS específicos de los componentes
 import "./Styles/ListProducts.css";
 import "./Styles/NewProduct.css";
 import "./Styles/StoreSelector.css";
 import "./Styles/CategorySelector.css";
-// Importa los nuevos estilos de App
-import './App.css'; // <-- Asegúrate que la ruta sea correcta
+import './App.css';
 
-// Ya no necesitas los estilos en línea para la navegación aquí
 
 export const App = () => {
   const { currentUser, loading } = useAuth();
-  const [activeView, setActiveView] = useState('list'); // 'list', 'add', 'stores', 'categories', 'compare', 'summary'
+  const [activeView, setActiveView] = useState('list');
 
   if (loading) {
       return <div>Cargando aplicación...</div>;
   }
 
   return (
-      // Usa la clase del contenedor principal definida en App.css
       <div className="app-container">
           <header>
               <h1>Mi Lista de Mercado</h1>
-              {/* El componente Auth se mostrará aquí si el usuario está logueado */}
               {currentUser && <Auth />}
           </header>
 
           {currentUser ? (
               <main>
-                  {/* Usa className en lugar de style para la navegación */}
                   <nav className="main-nav">
                       <button
                           className={`nav-button ${activeView === 'list' ? 'active' : ''}`}
@@ -88,15 +81,11 @@ export const App = () => {
                   </div>
               </main>
           ) : (
-              // --- Usuario NO LOGUEADO ---
-              // Muestra solo el componente Auth si no hay usuario
-              // Puedes envolverlo en un div con clase si necesitas estilos específicos
-              <div className="auth-container"> {/* Ejemplo de clase */}
+              <div className="auth-container">
                   <Auth />
               </div>
           )}
           <footer>
-              {/* El enlace de ayuda que agregaste */}
               <a href="mailto:soporte@tuapp.com?subject=Solicitud de Soporte App">¿Necesitas Ayuda?</a>
           </footer>
       </div>
