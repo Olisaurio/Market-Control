@@ -12,7 +12,7 @@ import {
     signOut
 } from "firebase/auth";
 
-// Estilos básicos (puedes moverlos a un archivo CSS)
+
 const styles = {
     container: {
         border: '1px solid #ccc',
@@ -23,7 +23,7 @@ const styles = {
     },
     input: {
         display: 'block',
-        width: 'calc(100% - 22px)', // Ajuste para padding/border
+        width: 'calc(100% - 22px)',
         padding: '10px',
         marginBottom: '10px',
         border: '1px solid #ddd',
@@ -32,7 +32,7 @@ const styles = {
     button: {
         padding: '10px 15px',
         marginRight: '10px',
-        marginBottom: '10px', // Espacio debajo de los botones
+        marginBottom: '10px',
         border: 'none',
         borderRadius: '4px',
         cursor: 'pointer',
@@ -74,7 +74,6 @@ export const Auth = () => {
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
             const user = userCredential.user;
             console.log("Usuario registrado exitosamente.", user);
-            // --- Guardar en localStorage al registrar ---
             localStorage.setItem('userId', user.uid);
             // ------------------------------------------
             setEmail('');
@@ -95,7 +94,7 @@ export const Auth = () => {
             const userCredential = await signInWithEmailAndPassword(auth, email, password);
             const user = userCredential.user;
             console.log("Inicio de sesión exitoso.", user);
-             // --- Guardar en localStorage al iniciar sesión ---
+
             localStorage.setItem('userId', user.uid);
             // -----------------------------------------------
             setEmail('');
@@ -112,7 +111,7 @@ export const Auth = () => {
             const result = await signInWithPopup(auth, provider);
             const user = result.user;
             console.log(`Inicio de sesión con ${provider.providerId} exitoso.`, user);
-             // --- Guardar en localStorage al iniciar sesión con proveedor ---
+
             localStorage.setItem('userId', user.uid);
             // -----------------------------------------------------------
         } catch (err) {
@@ -135,7 +134,6 @@ export const Auth = () => {
         try {
             await signOut(auth);
             console.log("Usuario cerró sesión");
-            // --- Eliminar de localStorage al cerrar sesión ---
             localStorage.removeItem('userId');
             // ----------------------------------------------
         } catch (err) {

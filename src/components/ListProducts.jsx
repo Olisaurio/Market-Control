@@ -1,7 +1,6 @@
-// src/components/ListProducts.jsx
 import React, { useContext, useState, useMemo } from 'react';
 import { ContextMarket } from '../Context/Context';
-import { useAuth } from '../Context/AuthContext'; // Importar useAuth
+import { useAuth } from '../Context/AuthContext';
 import '../Styles/ListProducts.css';
 
 export const ListProducts = () => {
@@ -14,29 +13,22 @@ export const ListProducts = () => {
 
     const { currentUser } = useAuth(); // Obtener el usuario actual
 
-    // Estados para ordenación y filtros existentes
     const [sortCriteria, setSortCriteria] = useState('timestamp_desc');
     const [filterName, setFilterName] = useState('');
     const [filterBrand, setFilterBrand] = useState('');
     const [filterCategory, setFilterCategory] = useState('');
 
-    // Estado para mostrar/ocultar inactivos
     const [showInactive, setShowInactive] = useState(false);
 
-    // --- Lógica de filtrado y ordenación ---
     const filteredAndSortedProducts = useMemo(() => {
         console.log("Recalculando lista filtrada/ordenada (con inactivos)...\nUsuario actual:", currentUser?.uid); // Log para depuración
 
-        // --- 1. Filtrar por usuario logueado ---
         let result = products.filter(product => product.userId === currentUser?.uid);
-        // Si no hay usuario logueado (currentUser es null), result será un array vacío.
 
-        // --- 2. Filtrar por estado Activo/Inactivo ---
         if (!showInactive) {
             result = result.filter(product => product.isActive !== false);
         }
 
-        // --- Filtrado por Nombre, Marca, Categoría (sin cambios) ---
         if (filterName) {
             const lowerCaseFilterName = filterName.toLowerCase();
             result = result.filter(product =>
@@ -53,7 +45,6 @@ export const ListProducts = () => {
             result = result.filter(product => product.categoryId == filterCategory);
         }
 
-        // --- Ordenación (sin cambios) ---
         switch (sortCriteria) {
             case 'name_asc':
                 result.sort((a, b) => a.name.localeCompare(b.name));
@@ -77,10 +68,8 @@ export const ListProducts = () => {
         }
 
         return result;
-    // 3. Añadir currentUser a las dependencias para que se reactive cuando el usuario cambie
     }, [products, sortCriteria, filterName, filterBrand, filterCategory, showInactive, currentUser]);
 
-    // --- Handlers ---
 
     const handleToggleActive = (id) => {
         const updatedProducts = products.map(product => {
@@ -97,12 +86,10 @@ export const ListProducts = () => {
         alert("Editando producto. Ve a la sección 'Añadir Producto' para modificarlo.");
     };
 
-    // --- Renderizado ---
     return (
         <div className="list-products-container">
             <h2>Lista de Productos</h2>
 
-            {/* Mostrar controles de filtro y ordenación solo si hay un usuario logueado */}
             {currentUser && (
                  <div className="filter-sort-controls">
                     <div className="filter-controls">
@@ -147,7 +134,6 @@ export const ListProducts = () => {
             )}
 
 
-            {/* Mostrar lista de productos o mensajes */}
             {!currentUser ? (
                  <p className="empty-message">Inicia sesión para ver tus productos.</p>
             ) : filteredAndSortedProducts.length > 0 ? (

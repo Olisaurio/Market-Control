@@ -16,7 +16,6 @@ export const CategorySelector = () => {
     const [errorMessage, setErrorMessage] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
     
-    // Manejar agregar nueva categoría
     const handleAddCategory = (e) => {
         e.preventDefault();
         
@@ -25,7 +24,6 @@ export const CategorySelector = () => {
             return;
         }
         
-        // Verificar si ya existe una categoría con ese nombre
         const categoryExists = categories.some(
             category => category.name.toLowerCase() === newCategoryName.trim().toLowerCase()
         );
@@ -35,27 +33,22 @@ export const CategorySelector = () => {
             return;
         }
         
-        // Agregar la nueva categoría
         const result = addCategory(newCategoryName.trim());
         
-        // Limpiar el formulario y mostrar mensaje de éxito
         setNewCategoryName('');
         setErrorMessage('');
         setSuccessMessage(result.message);
         setShowCategoryModal(false);
         
-        // Ocultar el mensaje de éxito después de 3 segundos
         setTimeout(() => {
             setSuccessMessage('');
         }, 3000);
     };
     
-    // Manejar eliminar categoría
     const handleDeleteCategory = () => {
         if (!selectedCategory) {
             setErrorMessage('Por favor, selecciona una categoría para eliminar.');
             
-            // Ocultar el mensaje de error después de 3 segundos
             setTimeout(() => {
                 setErrorMessage('');
             }, 3000);
@@ -67,7 +60,6 @@ export const CategorySelector = () => {
         if (!result.success) {
             setErrorMessage(result.message);
             
-            // Ocultar el mensaje de error después de 3 segundos
             setTimeout(() => {
                 setErrorMessage('');
             }, 3000);
@@ -76,13 +68,11 @@ export const CategorySelector = () => {
         
         setSuccessMessage(result.message);
         
-        // Ocultar el mensaje de éxito después de 3 segundos
         setTimeout(() => {
             setSuccessMessage('');
         }, 3000);
     };
     
-    // Manejar cambio de categoría seleccionada
     const handleCategoryChange = (e) => {
         const categoryId = parseInt(e.target.value);
         const category = categories.find(cat => cat.id === categoryId);
@@ -94,7 +84,6 @@ export const CategorySelector = () => {
             <h3>Selecciona una categoría</h3>
             
             <div className="category-controls">
-                {/* Select para elegir categoría */}
                 <div className="category-select-container">
                     <select 
                         className="category-select"
@@ -109,7 +98,6 @@ export const CategorySelector = () => {
                         ))}
                     </select>
                     
-                    {/* Botón para eliminar categoría seleccionada */}
                     <button 
                         className="delete-category-button"
                         onClick={handleDeleteCategory}
@@ -120,7 +108,6 @@ export const CategorySelector = () => {
                     </button>
                 </div>
                 
-                {/* Botón para mostrar modal de agregar */}
                 <button 
                     className="add-category-modal-button"
                     onClick={() => setShowCategoryModal(true)}
@@ -129,7 +116,6 @@ export const CategorySelector = () => {
                 </button>
             </div>
             
-            {/* Modal para agregar categoría */}
             {showCategoryModal && (
                 <div className="modal-background">
                     <div className="modal-content">
@@ -156,7 +142,6 @@ export const CategorySelector = () => {
                 </div>
             )}
             
-            {/* Mensajes de error o éxito */}
             {errorMessage && (
                 <div className="error-message">{errorMessage}</div>
             )}
@@ -164,7 +149,6 @@ export const CategorySelector = () => {
                 <div className="success-message">{successMessage}</div>
             )}
             
-            {/* Categoría seleccionada */}
             {selectedCategory && (
                 <p className="selected-category-info">
                     Categoría seleccionada: <strong>{selectedCategory.name}</strong>

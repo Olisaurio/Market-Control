@@ -5,35 +5,33 @@ import { ContextMarket } from '../Context/Context';
 export const MonthlySummary = () => {
     const { products } = useContext(ContextMarket);
 
-    // 1. Calcular gastos totales por mes (usando useMemo para eficiencia)
     const monthlySummaryData = useMemo(() => {
-        const monthlyTotals = {}; // Objeto para { 'YYYY-MM': totalAmount }
+        const monthlyTotals = {};
 
         products.forEach(product => {
             const date = new Date(product.timestamp);
             const year = date.getFullYear();
-            const month = String(date.getMonth() + 1).padStart(2, '0'); // Mes 01-12
+            const month = String(date.getMonth() + 1).padStart(2, '0');
             const monthKey = `${year}-${month}`;
 
             if (!monthlyTotals[monthKey]) {
                 monthlyTotals[monthKey] = 0;
             }
 
-            monthlyTotals[monthKey] += product.price; // Sumar el precio del producto
+            monthlyTotals[monthKey] += product.price; 
         });
 
-        // Convertir a array y ordenar por mes
         const formattedData = Object.entries(monthlyTotals)
             .map(([monthKey, total]) => ({
                 month: monthKey,
                 totalSpent: total
             }))
-            .sort((a, b) => a.month.localeCompare(b.month)); // Ordenar cronológicamente
+            .sort((a, b) => a.month.localeCompare(b.month)); 
 
         return formattedData;
-    }, [products]); // Recalcular solo si la lista de productos cambia
+    }, [products]);
 
-    // 2. Calcular el gasto total general
+
     const overallTotal = useMemo(() => {
         return monthlySummaryData.reduce((sum, monthData) => sum + monthData.totalSpent, 0);
     }, [monthlySummaryData]);
@@ -74,7 +72,7 @@ export const MonthlySummary = () => {
     );
 };
 
-// Estilos básicos (puedes moverlos a un CSS)
+
 const styles = {
     container: { padding: '20px', maxWidth: '600px', margin: '20px auto', background: '#fff', borderRadius: '8px', boxShadow: '0 2px 10px rgba(0,0,0,0.1)' },
     table: { width: '100%', borderCollapse: 'collapse', marginTop: '15px' },

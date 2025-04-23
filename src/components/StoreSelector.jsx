@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { ContextMarket } from '../Context/Context';
-import "../Styles/StoreSelector.css"; // Asegúrate que la ruta sea correcta
+import "../Styles/StoreSelector.css";
 
 export const StoreSelector = () => {
     const {
@@ -14,7 +14,7 @@ export const StoreSelector = () => {
     const [newStoreName, setNewStoreName] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
-    const [showStoreModal, setShowStoreModal] = useState(false); // Añadido para el modal de agregar
+    const [showStoreModal, setShowStoreModal] = useState(false);
 
     // Manejar agregar nueva tienda
     const handleAddStore = (e) => {
@@ -41,7 +41,7 @@ export const StoreSelector = () => {
         // Limpiar el formulario y mostrar mensaje de éxito
         setNewStoreName('');
         setErrorMessage('');
-        setSuccessMessage(result.message); // Asumiendo que addStore devuelve un objeto con message
+        setSuccessMessage(result.message);
         setShowStoreModal(false); // Cerrar modal al agregar
 
         // Ocultar el mensaje de éxito después de 3 segundos
@@ -93,7 +93,7 @@ export const StoreSelector = () => {
         <div className="store-selector">
             <h3>Selecciona una tienda</h3>
 
-            <div className="store-controls"> {/* Contenedor similar al de categorías */}
+            <div className="store-controls">
                 {/* Select para elegir tienda */}
                 <div className="store-select-container">
                     <select
@@ -109,18 +109,17 @@ export const StoreSelector = () => {
                         ))}
                     </select>
 
-                    {/* Botón para eliminar tienda seleccionada */}
                     <button
                         className="delete-store-button"
                         onClick={handleDeleteStore}
-                        disabled={!selectedStore} // Deshabilitar si no hay tienda seleccionada
+                        disabled={!selectedStore}
                         title="Eliminar tienda seleccionada"
                     >
                         Eliminar
                     </button>
                 </div>
 
-                 {/* Botón para mostrar modal de agregar */}
+
                 <button
                     className="add-store-modal-button"
                     onClick={() => setShowStoreModal(true)}
@@ -129,7 +128,7 @@ export const StoreSelector = () => {
                 </button>
             </div>
 
-             {/* Modal para agregar tienda */}
+
             {showStoreModal && (
                 <div className="modal-background">
                     <div className="modal-content">
@@ -157,7 +156,7 @@ export const StoreSelector = () => {
             )}
 
 
-            {/* Mensajes de error o éxito */}
+
             {errorMessage && (
                 <div className="error-message">{errorMessage}</div>
             )}
@@ -165,7 +164,7 @@ export const StoreSelector = () => {
                 <div className="success-message">{successMessage}</div>
             )}
 
-            {/* Tienda seleccionada */}
+
             {selectedStore && (
                 <p className="selected-store-info">
                     Tienda seleccionada: <strong>{selectedStore.name}</strong>

@@ -5,15 +5,14 @@ export const ContextMarket = createContext();
 export const ProviderMarket = ({children}) => {
     // Estados existentes
     const [NameProduct, SetNameProduct] = useState("")
-    const [BrandProduct, SetBrandProduct] = useState("") // Nuevo estado para marca
+    const [BrandProduct, SetBrandProduct] = useState("")
     const [PriceProduct, SetPriceProduct] = useState("")
-    const [UnitProduct, SetUnitProduct] = useState("") // Nuevo estado para unidad de medida
+    const [UnitProduct, SetUnitProduct] = useState("")
     const [DateProduct, SetDateProduct] = useState("")
     const [products, SetProducts] = useState([])
     const [total, setTotal] = useState(0)
-    const [editingProduct, setEditingProduct] = useState(null) // Para edición de productos
+    const [editingProduct, setEditingProduct] = useState(null)
     
-    // Estados para tiendas
     const [stores, setStores] = useState([
         { id: 1, name: "ARA" },
         { id: 2, name: "Exito" },
@@ -21,7 +20,6 @@ export const ProviderMarket = ({children}) => {
     ])
     const [selectedStore, setSelectedStore] = useState(null)
     
-    // Estados para categorías
     const [categories, setCategories] = useState([
         { id: 1, name: "Frutas y Verduras" },
         { id: 2, name: "Lácteos" },
@@ -31,7 +29,6 @@ export const ProviderMarket = ({children}) => {
     const [selectedCategory, setSelectedCategory] = useState(null)
     const [showCategoryModal, setShowCategoryModal] = useState(false)
     
-    // Función para agregar una nueva tienda
     const addStore = (storeName) => {
         // Generar un ID único
         const maxId = stores.length > 0 ? Math.max(...stores.map(store => store.id)) : 0;
@@ -63,7 +60,6 @@ export const ProviderMarket = ({children}) => {
         return { success: true, message: "Tienda eliminada correctamente." };
     };
     
-    // Función para agregar una nueva categoría
     const addCategory = (categoryName) => {
         // Generar un ID único
         const maxId = categories.length > 0 ? Math.max(...categories.map(category => category.id)) : 0;
@@ -98,7 +94,6 @@ export const ProviderMarket = ({children}) => {
     
     return(
         <ContextMarket.Provider value={{
-            // Valores existentes
             NameProduct,
             SetNameProduct,
             BrandProduct,

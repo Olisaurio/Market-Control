@@ -1,9 +1,7 @@
-// src/components/NewProduct.jsx
 import React, { useContext, useEffect } from 'react';
 import { ContextMarket } from '../Context/Context';
-import { useAuth } from '../Context/AuthContext'; // Importar useAuth
+import { useAuth } from '../Context/AuthContext';
 import md5 from 'md5';
-// Importa los estilos CSS para este componente
 import '../Styles/NewProduct.css';
 import { StoreSelector } from './StoreSelector';
 import { CategorySelector } from './CategorySelector';
@@ -21,9 +19,9 @@ export const NewProduct = () => {
         products,
         SetProducts,
         selectedStore,
-        setSelectedStore, // <-- Añadir setSelectedStore
+        setSelectedStore, 
         selectedCategory,
-        setSelectedCategory, // <-- Añadir setSelectedCategory
+        setSelectedCategory,
         editingProduct,
         setEditingProduct
     } = useContext(ContextMarket);
@@ -37,13 +35,11 @@ export const NewProduct = () => {
             SetBrandProduct(editingProduct.brand || "");
             SetPriceProduct(editingProduct.price.toString());
             SetUnitProduct(editingProduct.unit || "");
-            // Al editar, también podrías querer seleccionar la tienda y categoría del producto
-            // Esto requeriría buscar la tienda/categoría por ID en tus listas 'stores'/'categories'
-            // y llamar a setSelectedStore/setSelectedCategory. Por ahora, solo limpiamos si no hay edición.
+
         } else {
              clearForm();
         }
-    }, [editingProduct]); // Dependencia en editingProduct
+    }, [editingProduct]);
 
     const clearForm = () => {
         SetNameProduct("");
@@ -58,7 +54,7 @@ export const NewProduct = () => {
         e.preventDefault();
 
         // Validaciones
-        if (!currentUser) { // Asegurarse de que haya un usuario logueado
+        if (!currentUser) {
              alert("Debes iniciar sesión para agregar o actualizar productos.");
              return;
         }
@@ -76,12 +72,10 @@ export const NewProduct = () => {
         }
 
         const currentDate = new Date();
-        // Asegúrate de que formattedDate se genere correctamente si lo usas
         const formattedDate = currentDate.toLocaleDateString('es-ES', { year: 'numeric', month: '2-digit', day: '2-digit' }); // Ejemplo de formato
         const currentTimestamp = currentDate.getTime();
 
         if (editingProduct) {
-            // Actualizar producto existente
             const updatedProducts = products.map(product =>
                 product.id === editingProduct.id
                     ? {
@@ -96,7 +90,7 @@ export const NewProduct = () => {
                         storeName: selectedStore.name,
                         categoryId: selectedCategory.id,
                         categoryName: selectedCategory.name,
-                        // userId se mantiene como estaba en el producto original
+
                       }
                     : product
                 );
@@ -104,7 +98,6 @@ export const NewProduct = () => {
                 setEditingProduct(null);
             } else {
                 // Crear nuevo producto
-                // Incluir userId en el ID para mayor unicidad si es necesario
                 const idString = `${NameProduct}-${PriceProduct}-${currentTimestamp}-${currentUser.uid}`;
                 const id = md5(idString);
 
@@ -137,8 +130,6 @@ export const NewProduct = () => {
         <form className="new-product-container" onSubmit={handleProduct}>
             <h2>{editingProduct ? 'Actualizar Producto' : 'Agregar Nuevo Producto'}</h2>
 
-            {/* Mostrar selectores de tienda y categoría */}
-            {/* Estos componentes usan selectedStore y selectedCategory del contexto */}
             <StoreSelector />
             <CategorySelector />
 

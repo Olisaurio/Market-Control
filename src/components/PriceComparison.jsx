@@ -1,63 +1,54 @@
-// src/components/PriceComparison.jsx
 import React, { useContext, useState, useMemo, useEffect } from 'react';
 import { ContextMarket } from '../Context/Context';
-// Puedes añadir estilos específicos si lo deseas
-// import '../Styles/PriceComparison.css';
 
 export const PriceComparison = () => {
     const { products } = useContext(ContextMarket);
-    const [selectedProductKey, setSelectedProductKey] = useState(''); // Estado para el producto seleccionado
-    const [comparisonData, setComparisonData] = useState(null); // Estado para los datos de comparación
+    const [selectedProductKey, setSelectedProductKey] = useState('');
+    const [comparisonData, setComparisonData] = useState(null);
 
-    // 1. Identificar tipos de productos únicos (usando useMemo para eficiencia)
     const uniqueProductTypes = useMemo(() => {
         const uniqueKeys = new Set();
         const types = [];
 
         products.forEach(product => {
-            // Crear una clave única combinando nombre, marca (opcional) y unidad
-            // Convertir a minúsculas para evitar duplicados por capitalización
             const key = `${product.name.toLowerCase()}|${product.brand?.toLowerCase() || ''}|${product.unit.toLowerCase()}`;
 
             if (!uniqueKeys.has(key)) {
                 uniqueKeys.add(key);
                 types.push({
-                    key: key, // Guardamos la clave para referencia
+                    key: key,
                     name: product.name,
-                    brand: product.brand || '', // Asegurar que brand exista
+                    brand: product.brand || '',
                     unit: product.unit,
-                    // Texto descriptivo para el dropdown
+ 
                     displayText: `${product.name} ${product.brand ? `(${product.brand})` : ''} - ${product.unit}`
                 });
             }
         });
 
-        // Ordenar alfabéticamente para el dropdown
+
         types.sort((a, b) => a.displayText.localeCompare(b.displayText));
 
         return types;
-    }, [products]); // Recalcular solo si la lista de productos cambia
+    }, [products]);
 
-    // 2. Calcular datos de comparación cuando se selecciona un producto
+
     useEffect(() => {
         if (!selectedProductKey) {
-            setComparisonData(null); // Limpiar si no hay selección
+            setComparisonData(null);
             return;
         }
 
-        // Encontrar todas las compras del producto seleccionado
         const selectedProductEntries = products.filter(product => {
             const key = `${product.name.toLowerCase()}|${product.brand?.toLowerCase() || ''}|${product.unit.toLowerCase()}`;
             return key === selectedProductKey;
         });
 
-        // Agrupar por mes y año
-        const monthlyData = {}; // Objeto para { 'YYYY-MM': { prices: [], count: 0, total: 0 } }
+        const monthlyData = {};
 
         selectedProductEntries.forEach(entry => {
             const date = new Date(entry.timestamp);
             const year = date.getFullYear();
-            // getMonth() es 0-indexado, sumar 1 y asegurar dos dígitos con padStart
             const month = String(date.getMonth() + 1).padStart(2, '0');
             const monthKey = `${year}-${month}`;
 
@@ -70,10 +61,9 @@ export const PriceComparison = () => {
             monthlyData[monthKey].total += entry.price;
         });
 
-        // Calcular promedio y formatear para mostrar
         const formattedData = Object.entries(monthlyData)
             .map(([monthKey, data]) => ({
-                month: monthKey, // 'YYYY-MM'
+                month: monthKey,
                 averagePrice: data.total / data.count,
                 minPrice: Math.min(...data.prices),
                 maxPrice: Math.max(...data.prices),
@@ -86,12 +76,11 @@ export const PriceComparison = () => {
     }, [selectedProductKey, products]); // Recalcular si cambia el producto seleccionado o la lista general
 
     return (
-        <div className="price-comparison-container" style={styles.container}> {/* Añade estilos si quieres */}
+        <div className="price-comparison-container" style={styles.container}>
             <h2>Comparar Precios por Mes</h2>
 
             {uniqueProductTypes.length > 0 ? (
                 <>
-                    {/* 3. Dropdown para seleccionar producto */}
                     <div style={styles.selectorContainer}>
                         <label htmlFor="productSelector" style={styles.label}>Selecciona un producto:</label>
                         <select
@@ -109,7 +98,6 @@ export const PriceComparison = () => {
                         </select>
                     </div>
 
-                    {/* 4. Mostrar resultados de comparación */}
                     {comparisonData && comparisonData.length > 0 ? (
                         <div style={styles.resultsContainer}>
                             <h3>Historial de Precios para: {uniqueProductTypes.find(p => p.key === selectedProductKey)?.displayText}</h3>
@@ -149,7 +137,7 @@ export const PriceComparison = () => {
     );
 };
 
-// Estilos básicos (puedes moverlos a un CSS)
+// Estilos básicos moverlos a un CSS
 const styles = {
     container: { padding: '20px', maxWidth: '800px', margin: '20px auto', background: '#fff', borderRadius: '8px', boxShadow: '0 2px 10px rgba(0,0,0,0.1)' },
     selectorContainer: { marginBottom: '25px' },
