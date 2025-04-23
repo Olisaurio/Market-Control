@@ -138,3 +138,269 @@
   border-radius: 4px;
   border: 1px solid #ddd;
 }
+/* src/Styles/ListProducts.css */
+
+/* Reutilizando variables si las definiste globalmente */
+:root {
+  --primary-color: #4dabf7;
+  --danger-color: #fa5252;
+  --danger-hover-color: #ff6b6b;
+  --light-gray-color: #f1f3f5;
+  --medium-gray-color: #ced4da;
+  --dark-gray-color: #868e96; /* Gris más oscuro para texto secundario */
+  --text-color: #343a40;
+  --container-bg: #ffffff;
+  --item-bg: #ffffff;
+  --item-hover-bg: #f8f9fa; /* Fondo sutil al pasar el mouse */
+  --border-radius: 8px;
+  --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* Sombra más suave */
+  --item-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+}
+
+.list-products-container { /* Cambiado de .aside para claridad */
+  background-color: var(--container-bg);
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  padding: 25px 30px;
+  margin: 20px auto;
+  max-width: 600px; /* Un poco más ancho para la lista */
+  border: 1px solid var(--light-gray-color);
+}
+
+.list-products-container h2 {
+  color: var(--text-color);
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 1.6rem;
+  font-weight: 600;
+  border-bottom: 1px solid var(--light-gray-color);
+  padding-bottom: 15px;
+  text-transform: capitalize; /* Mantenido si te gusta */
+}
+
+/* Controles de Filtro y Ordenación */
+.filter-sort-controls {
+  display: flex;
+  flex-wrap: wrap; /* Para que se ajusten en pantallas pequeñas */
+  gap: 15px; /* Espacio entre controles */
+  margin-bottom: 25px;
+  padding: 15px;
+  background-color: var(--light-gray-color); /* Fondo para agruparlos */
+  border-radius: var(--border-radius);
+}
+
+.filter-controls, .sort-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-grow: 1; /* Para que ocupen espacio disponible */
+}
+
+.filter-controls label, .sort-controls label {
+  font-weight: 500;
+  color: var(--dark-gray-color);
+  font-size: 0.9rem;
+  margin-bottom: 0; /* Reset margin */
+}
+
+.filter-select, .sort-select {
+  padding: 8px 12px; /* Más padding */
+  border-radius: var(--border-radius);
+  border: 1px solid var(--medium-gray-color);
+  background-color: white;
+  flex-grow: 1; /* Ocupa espacio */
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+/* Lista de Productos */
+.list-products-container ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.product-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding: 15px 20px;
+  border-radius: var(--border-radius);
+  background-color: var(--item-bg);
+  box-shadow: var(--item-shadow);
+  border: 1px solid var(--light-gray-color);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.product-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  background-color: var(--item-hover-bg);
+}
+
+.product-info {
+  flex-grow: 1;
+  margin-right: 15px; /* Espacio antes de los botones */
+  line-height: 1.5; /* Mejor espaciado vertical */
+}
+
+.product-info strong { /* Nombre del producto */
+  color: var(--text-color);
+  font-size: 1.1rem;
+  display: block; /* En su propia línea */
+  margin-bottom: 4px;
+}
+
+.product-info span { /* Otros detalles */
+  display: block; /* Cada detalle en su línea */
+  font-size: 0.9rem;
+  color: var(--dark-gray-color);
+}
+
+.product-brand { /* Estilo específico para marca */
+  font-style: italic;
+}
+.product-price { /* Estilo específico para precio */
+  font-weight: 500;
+  color: #28a745; /* Verde para el precio */
+}
+.product-category { /* Estilo específico para categoría */
+  color: var(--primary-color); /* Azul para categoría */
+  font-size: 0.85rem;
+}
+.product-date { /* Estilo específico para fecha */
+   color: #6f42c1; /* Morado para fecha */
+   font-size: 0.85rem;
+}
+
+.product-actions {
+  display: flex;
+  gap: 10px; /* Espacio entre botones de acción */
+}
+
+.edit-button, /* Si añades botón de editar */
+.delete-button {
+  background-color: transparent; /* Fondo transparente */
+  color: var(--dark-gray-color);
+  border: none;
+  border-radius: 50%; /* Círculo */
+  padding: 8px; /* Ajusta para tamaño */
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+  display: flex; /* Para centrar icono si lo usas */
+  align-items: center;
+  justify-content: center;
+  width: 32px; /* Tamaño fijo */
+  height: 32px;
+}
+
+/* Iconos (ejemplo usando texto, idealmente usarías SVGs o una librería de iconos) */
+.edit-button::before { content: '✏️'; font-size: 1rem; }
+.delete-button::before { content: '🗑️'; font-size: 1rem; }
+
+
+.edit-button:hover {
+  background-color: #e0e0e0;
+  color: var(--primary-color);
+}
+
+.delete-button:hover {
+  background-color: #ffe3e3; /* Fondo rojo claro */
+  color: var(--danger-color);
+}
+
+
+.empty-message {
+  text-align: center;
+  color: var(--dark-gray-color);
+  font-style: italic;
+  padding: 30px 20px;
+  background-color: var(--light-gray-color);
+  border-radius: var(--border-radius);
+  margin-top: 20px;
+}
+
+.total-value {
+  margin-top: 30px;
+  font-weight: bold;
+  font-size: 1.3rem; /* Ligeramente más pequeño */
+  text-align: right;
+  color: var(--primary-color);
+  background-color: #e7f5ff; /* Fondo azul claro */
+  padding: 15px 20px;
+  border-radius: var(--border-radius);
+  border: 1px solid #d0ebff; /* Borde azul más claro */
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .list-products-container {
+    padding: 20px;
+    margin: 15px;
+  }
+  .product-item {
+    flex-direction: column; /* Apila en pantallas pequeñas */
+    align-items: flex-start; /* Alinea al inicio */
+    padding: 15px;
+  }
+  .product-info {
+    margin-right: 0;
+    margin-bottom: 10px; /* Espacio antes de las acciones */
+  }
+  .product-actions {
+    align-self: flex-end; /* Mueve acciones a la derecha */
+  }
+  .filter-sort-controls {
+    flex-direction: column; /* Apila controles de filtro/orden */
+    align-items: stretch; /* Estira elementos */
+  }
+  .filter-select, .sort-select {
+    width: 100%; /* Ancho completo */
+  }
+}
+
+/* src/Styles/ListProducts.css */
+
+/* ... (otros estilos existentes) ... */
+
+/* Estilo para productos inactivos */
+.product-item.inactive-product {
+  opacity: 0.6; 
+  background-color: #f8f9fa;
+  .product-info strong { text-decoration: line-through; }
+}
+
+.product-item.inactive-product:hover {
+    opacity: 0.8; /* Aclarar un poco al pasar el mouse */
+}
+
+/* Estilos opcionales para el botón de activar/desactivar */
+.toggle-active-button {
+  background-color: transparent;
+  border: none;
+  border-radius: 50%;
+  padding: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  font-size: 1rem; /* Tamaño del icono/texto */
+}
+
+.toggle-active-button.deactivate { /* Botón para desactivar */
+  color: #ffc107; /* Amarillo/Naranja */
+}
+.toggle-active-button.deactivate:hover {
+  background-color: #fff3cd; /* Fondo amarillo claro */
+}
+
+.toggle-active-button.activate { /* Botón para activar */
+   color: #28a745; /* Verde */
+}
+.toggle-active-button.activate:hover {
+   background-color: #d4edda; /* Fondo verde claro */
+}

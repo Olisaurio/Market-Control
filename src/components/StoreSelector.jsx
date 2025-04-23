@@ -1,5 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { ContextMarket } from '../Context/Context';
+import "../Styles/StoreSelector.css"; // Asegúrate que la ruta sea correcta
 
 export const StoreSelector = () => {
     const {

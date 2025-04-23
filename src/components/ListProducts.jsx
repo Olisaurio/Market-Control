@@ -1,189 +1,186 @@
-import React, { useState, useContext, useEffect } from "react";
-import { ContextMarket } from "../Context/Context";
-import md5 from "md5";
+// src/components/ListProducts.jsx
+import React, { useContext, useState, useMemo } from 'react';
+import { ContextMarket } from '../Context/Context';
+import { useAuth } from '../Context/AuthContext'; // Importar useAuth
+import '../Styles/ListProducts.css';
 
 export const ListProducts = () => {
-  const { 
-    products, 
-    total, 
-    setTotal, 
-    SetProducts, 
-    selectedStore, 
-    selectedCategory,
-    setEditingProduct 
-  } = useContext(ContextMarket);
-  const [sortType, setSortType] = useState("none");
-  const [filterCategory, setFilterCategory] = useState("all");
+    const {
+        products,
+        SetProducts,
+        setEditingProduct,
+        categories
+    } = useContext(ContextMarket);
 
-  const handleEdit = (product) => {
-    setEditingProduct(product);
-    // Hacer scroll hacia el formulario
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth'
-    });
-  };
-  
-  // Obtener fecha actual formateada
-  const getCurrentDate = () => {
-    const today = new Date();
-    const options = {
-      weekday: "long",
-      year: "numeric",
-      month: "long",
-      day: "numeric",
+    const { currentUser } = useAuth(); // Obtener el usuario actual
+
+    // Estados para ordenación y filtros existentes
+    const [sortCriteria, setSortCriteria] = useState('timestamp_desc');
+    const [filterName, setFilterName] = useState('');
+    const [filterBrand, setFilterBrand] = useState('');
+    const [filterCategory, setFilterCategory] = useState('');
+
+    // Estado para mostrar/ocultar inactivos
+    const [showInactive, setShowInactive] = useState(false);
+
+    // --- Lógica de filtrado y ordenación ---
+    const filteredAndSortedProducts = useMemo(() => {
+        console.log("Recalculando lista filtrada/ordenada (con inactivos)...\nUsuario actual:", currentUser?.uid); // Log para depuración
+
+        // --- 1. Filtrar por usuario logueado ---
+        let result = products.filter(product => product.userId === currentUser?.uid);
+        // Si no hay usuario logueado (currentUser es null), result será un array vacío.
+
+        // --- 2. Filtrar por estado Activo/Inactivo ---
+        if (!showInactive) {
+            result = result.filter(product => product.isActive !== false);
+        }
+
+        // --- Filtrado por Nombre, Marca, Categoría (sin cambios) ---
+        if (filterName) {
+            const lowerCaseFilterName = filterName.toLowerCase();
+            result = result.filter(product =>
+                product.name.toLowerCase().includes(lowerCaseFilterName)
+            );
+        }
+        if (filterBrand) {
+            const lowerCaseFilterBrand = filterBrand.toLowerCase();
+            result = result.filter(product =>
+                product.brand && product.brand.toLowerCase().includes(lowerCaseFilterBrand)
+            );
+        }
+        if (filterCategory) {
+            result = result.filter(product => product.categoryId == filterCategory);
+        }
+
+        // --- Ordenación (sin cambios) ---
+        switch (sortCriteria) {
+            case 'name_asc':
+                result.sort((a, b) => a.name.localeCompare(b.name));
+                break;
+            case 'name_desc':
+                result.sort((a, b) => b.name.localeCompare(a.name));
+                break;
+            case 'price_asc':
+                result.sort((a, b) => a.price - b.price);
+                break;
+            case 'price_desc':
+                result.sort((a, b) => b.price - a.price);
+                break;
+            case 'timestamp_asc':
+                result.sort((a, b) => a.timestamp - b.timestamp);
+                break;
+            case 'timestamp_desc':
+            default:
+                result.sort((a, b) => b.timestamp - a.timestamp);
+                break;
+        }
+
+        return result;
+    // 3. Añadir currentUser a las dependencias para que se reactive cuando el usuario cambie
+    }, [products, sortCriteria, filterName, filterBrand, filterCategory, showInactive, currentUser]);
+
+    // --- Handlers ---
+
+    const handleToggleActive = (id) => {
+        const updatedProducts = products.map(product => {
+            if (product.id === id) {
+                return { ...product, isActive: !(product.isActive ?? true) };
+            }
+            return product;
+        });
+        SetProducts(updatedProducts);
     };
-    return today.toLocaleDateString("es-ES", options);
-  };
 
-  // Calcular el total
-  const totalProducts = () => {
-    let total = 0;
-    products.forEach((product) => {
-      total = total + product.price;
-    });
-    setTotal(total);
-  };
+    const handleEdit = (product) => {
+        setEditingProduct(product);
+        alert("Editando producto. Ve a la sección 'Añadir Producto' para modificarlo.");
+    };
 
-  // Eliminar un producto
-  const handleDelete = (id) => {
-    const updatedProducts = products.filter((product) => product.id !== id);
-    SetProducts(updatedProducts);
-  };
-
-  // Ordenar productos
-  const sortProducts = (type) => {
-    setSortType(type);
-    let sortedProducts = [...products];
-
-    if (type === "name") {
-      sortedProducts.sort((a, b) => a.name.localeCompare(b.name));
-    } else if (type === "price-asc") {
-      sortedProducts.sort((a, b) => a.price - b.price);
-    } else if (type === "price-desc") {
-      sortedProducts.sort((a, b) => b.price - a.price);
-    } else if (type === "date-newest") {
-      sortedProducts.sort((a, b) => {
-        // Si tienen timestamp
-        if (a.timestamp && b.timestamp) {
-          return new Date(b.timestamp) - new Date(a.timestamp);
-        }
-        // Si no, intentamos convertir la fecha de string
-        return new Date(b.date) - new Date(a.date);
-      });
-    } else if (type === "date-oldest") {
-      sortedProducts.sort((a, b) => {
-        if (a.timestamp && b.timestamp) {
-          return new Date(a.timestamp) - new Date(b.timestamp);
-        }
-        return new Date(a.date) - new Date(b.date);
-      });
-    } else if (type === "category") {
-      sortedProducts.sort((a, b) => (a.categoryName || "").localeCompare(b.categoryName || ""));
-    }
-
-    SetProducts(sortedProducts);
-  };
-
-  // Filtrar productos por categoría
-  const getFilteredProducts = () => {
-    if (filterCategory === "all") {
-      return products;
-    }
-    return products.filter(product => product.categoryId === parseInt(filterCategory));
-  };
-
-  useEffect(() => {
-    const productsWithIds = products.map((product) => {
-      if (!product.id) {
-        const idString = `${product.name}-${product.price}-${Date.now()}`;
-        return { ...product, id: md5(idString) };
-      }
-      return product;
-    });
-
-    if (JSON.stringify(productsWithIds) !== JSON.stringify(products)) {
-      SetProducts(productsWithIds);
-    }
-  }, []);
-
-  useEffect(() => {
-    totalProducts();
-  }, [products]);
-
-  // Obtener categorías únicas para el filtro
-  const uniqueCategories = [...new Set(products
-    .filter(product => product.categoryId)
-    .map(product => ({ id: product.categoryId, name: product.categoryName })))];
-
+    // --- Renderizado ---
     return (
-      <>
-        <div className="aside">
-          <h2>Lista de productos - {getCurrentDate()}</h2>
-  
-          <div className="filter-sort-controls">
-            {/* Controles de ordenación existentes */}
-          </div>
-  
-          {products.length === 0 ? (
-            <p className="empty-message">No hay productos en la lista</p>
-          ) : (
-            <ul>
-              {getFilteredProducts().map((product) => (
-                <li key={product.id} className="product-item">
-                  <div className="product-info">
-                    <strong>{product.name}</strong>
-                    {product.brand && (
-                      <span className="product-brand">
-                        <br />
-                        Marca: {product.brand}
-                      </span>
-                    )}
-                    <br />${product.price.toFixed(2)}
-                    {product.unit && (
-                      <span className="product-unit">
-                        {" "}/ {product.unit}
-                      </span>
-                    )}
-                    <br />
-                    <span className="product-date">Fecha: {product.date}</span>
-                    {product.storeName && (
-                      <span className="product-store">
-                        <br />
-                        Tienda: {product.storeName}
-                      </span>
-                    )}
-                    {product.categoryName && (
-                      <span className="product-category">
-                        <br />
-                        Categoría: {product.categoryName}
-                      </span>
-                    )}
-                    <br />
-                    <small className="product-id">
-                      ID: {product.id.substring(0, 8)}...
-                    </small>
-                  </div>
-                  <div className="product-actions">
-                    <button
-                      className="edit-button"
-                      onClick={() => handleEdit(product)}
-                    >
-                      Editar
-                    </button>
-                    <button
-                      className="delete-button"
-                      onClick={() => handleDelete(product.id)}
-                    >
-                      Eliminar
-                    </button>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          )}
-          <div className="total-value">Valor Total: ${total.toFixed(2)}</div>
+        <div className="list-products-container">
+            <h2>Lista de Productos</h2>
+
+            {/* Mostrar controles de filtro y ordenación solo si hay un usuario logueado */}
+            {currentUser && (
+                 <div className="filter-sort-controls">
+                    <div className="filter-controls">
+                        <label htmlFor="filterName">Nombre:</label>
+                        <input type="text" id="filterName" className="filter-input" placeholder="Buscar por nombre..." value={filterName} onChange={(e) => setFilterName(e.target.value)} />
+                    </div>
+                    <div className="filter-controls">
+                        <label htmlFor="filterBrand">Marca:</label>
+                        <input type="text" id="filterBrand" className="filter-input" placeholder="Buscar por marca..." value={filterBrand} onChange={(e) => setFilterBrand(e.target.value)} />
+                    </div>
+                    <div className="filter-controls">
+                        <label htmlFor="filterCategory">Categoría:</label>
+                        <select id="filterCategory" className="filter-select" value={filterCategory} onChange={(e) => setFilterCategory(e.target.value)}>
+                            <option value="">-- Todas --</option>
+                            {categories.map(category => (<option key={category.id} value={category.id}>{category.name}</option>))}
+                        </select>
+                    </div>
+
+                     <div className="sort-controls">
+                        <label htmlFor="sortCriteria">Ordenar por:</label>
+                        <select id="sortCriteria" className="sort-select" value={sortCriteria} onChange={(e) => setSortCriteria(e.target.value)}>
+                            <option value="timestamp_desc">Más Recientes</option>
+                            <option value="timestamp_asc">Más Antiguos</option>
+                            <option value="name_asc">Nombre (A-Z)</option>
+                            <option value="name_desc">Nombre (Z-A)</option>
+                            <option value="price_asc">Precio (Menor a Mayor)</option>
+                            <option value="price_desc">Precio (Mayor a Menor)</option>
+                        </select>
+                    </div>
+
+                    <div className="filter-controls" style={{ flexGrow: 0 }}>
+                        <label htmlFor="showInactive" style={{ cursor: 'pointer' }}>Mostrar inactivos:</label>
+                        <input
+                            type="checkbox"
+                            id="showInactive"
+                            checked={showInactive}
+                            onChange={(e) => setShowInactive(e.target.checked)}
+                            style={{ cursor: 'pointer', width: '18px', height: '18px' }}
+                        />
+                    </div>
+                </div>
+            )}
+
+
+            {/* Mostrar lista de productos o mensajes */}
+            {!currentUser ? (
+                 <p className="empty-message">Inicia sesión para ver tus productos.</p>
+            ) : filteredAndSortedProducts.length > 0 ? (
+                <ul>
+                    {filteredAndSortedProducts.map(product => (
+                        <li key={product.id} className={`product-item ${product.isActive === false ? 'inactive-product' : ''}`}>
+                            <div className="product-info">
+                                <strong>{product.name}</strong>
+                                {product.brand && <span className="product-brand">Marca: {product.brand}</span>}
+                                <span className="product-price">Precio: ${product.price.toFixed(2)} ({product.unit})</span>
+                                {product.categoryName && <span className="product-category">Categoría: {product.categoryName}</span>}
+                                <span className="product-date">Agregado: {product.date}</span>
+                                {product.isActive === false && <span style={{ color: 'grey', fontStyle: 'italic', display: 'block' }}>(Inactivo)</span>}
+                            </div>
+                            <div className="product-actions">
+                                <button onClick={() => handleEdit(product)} className="edit-button" title="Editar"></button>
+                                <button
+                                    onClick={() => handleToggleActive(product.id)}
+                                    className={`toggle-active-button ${product.isActive === false ? 'activate' : 'deactivate'}`}
+                                    title={product.isActive === false ? 'Activar producto' : 'Desactivar producto'}
+                                >
+                                    {product.isActive === false ? '🔄' : '➖'}
+                                </button>
+                            </div>
+                        </li>
+                    ))}
+                </ul>
+            ) : (
+                <p className="empty-message">
+                    {products.length > 0 && !filteredAndSortedProducts.length && "No hay productos que coincidan con los filtros para este usuario."}
+                    {products.length === 0 && "No has agregado ningún producto todavía."}
+                </p>
+            )}
         </div>
-      </>
     );
-  };
+};

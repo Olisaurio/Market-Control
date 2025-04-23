@@ -1,67 +1,139 @@
-.container {
-    background-color: #ffffff;
-    border-radius: 12px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    padding: 30px;
-    margin: 20px;
-    max-width: 450px;
+/* src/Styles/NewProduct.css - Revisión Horizontal y Nueva Paleta */
+
+:root {
+  /* Nueva Paleta de Colores (Teal/Gris) */
+  --primary-color: #48C9B0; /* Teal principal */
+  --primary-hover-color: #40B5A0; /* Teal más oscuro para hover */
+  --light-bg-color: #f8f9fa; /* Fondo muy claro */
+  --border-color: #d6dbdf; /* Borde gris claro */
+  --label-color: #566573; /* Gris azulado para etiquetas */
+  --text-color: #34495e; /* Gris oscuro para texto */
+  --container-bg: #ffffff;
+  --border-radius: 6px; /* Ligeramente más pequeño */
+  --box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08); /* Sombra más suave */
+  --focus-shadow-color: rgba(72, 201, 176, 0.3); /* Sombra de foco Teal */
+}
+
+.new-product-container {
+  background-color: var(--container-bg);
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  padding: 20px 25px; /* Padding ajustado */
+  margin: 20px auto;
+  max-width: 550px; /* Ancho máximo ajustado */
+  border: 1px solid var(--border-color);
+}
+
+.new-product-container h2 {
+  color: var(--text-color);
+  text-align: center;
+  margin-top: 0; /* Quitar margen superior */
+  margin-bottom: 25px;
+  font-size: 1.4rem; /* Tamaño ajustado */
+  font-weight: 600;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 12px;
+}
+
+/* Contenedor para cada par Label-Input */
+.input-row {
+  display: flex;
+  flex-wrap: wrap; /* Permite que se apilen en pantallas muy pequeñas */
+  align-items: center; /* Alinea verticalmente label e input */
+  margin-bottom: 15px; /* Espacio entre filas */
+  gap: 10px; /* Espacio entre label e input si se envuelven */
+}
+
+.new-product-container label {
+  flex-basis: 120px; /* Ancho fijo para la etiqueta */
+  flex-shrink: 0; /* Evita que la etiqueta se encoja */
+  font-weight: 500;
+  color: var(--label-color);
+  font-size: 0.9rem;
+  text-align: right; /* Alinea el texto de la etiqueta a la derecha */
+  padding-right: 10px; /* Espacio entre etiqueta e input */
+  box-sizing: border-box;
+}
+
+.new-product-container input[type="text"],
+.new-product-container input[type="number"],
+.new-product-container input[type="date"] {
+  flex-grow: 1; /* El input ocupa el espacio restante */
+  min-width: 150px; /* Ancho mínimo para evitar que sea demasiado pequeño */
+  padding: 9px 12px; /* Padding ajustado para menor altura */
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  font-size: 0.95rem; /* Tamaño de fuente ligeramente reducido */
+  color: var(--text-color);
+  transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  box-sizing: border-box;
+}
+
+.new-product-container input:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px var(--focus-shadow-color);
+  outline: none;
+}
+
+.new-product-container input::placeholder {
+  color: #aab7b8; /* Placeholder gris claro */
+}
+
+/* Contenedor para el botón para centrarlo o alinearlo */
+.button-container {
+  text-align: right; /* Alinea el botón a la derecha */
+  margin-top: 20px; /* Espacio sobre el botón */
+}
+
+.new-product-container button.add-button {
+  /* El botón ya no ocupa todo el ancho */
+  padding: 10px 25px; /* Padding ajustado */
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: var(--border-radius);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out, transform 0.1s ease;
+}
+
+.new-product-container button.add-button:hover {
+  background-color: var(--primary-hover-color);
+  transform: translateY(-2px);
+}
+
+.new-product-container button.add-button:active {
+  transform: translateY(0);
+}
+
+/* Ajustes responsivos */
+@media (max-width: 500px) {
+  .input-row {
+    flex-direction: column; /* Apila label e input */
+    align-items: stretch; /* Estira los elementos */
+    gap: 5px; /* Reduce el espacio */
+    margin-bottom: 12px;
   }
-  
-  .container h2 {
-    color: #3a3a3a;
-    text-align: center;
-    margin-bottom: 25px;
-    font-size: 1.8rem;
-    font-weight: 600;
+
+  .new-product-container label {
+    flex-basis: auto; /* Resetea el ancho fijo */
+    text-align: left; /* Alinea a la izquierda */
+    padding-right: 0;
+    margin-bottom: 3px; /* Pequeño espacio bajo la etiqueta */
   }
-  
-  .container input {
-    width: 100%;
-    padding: 12px 15px;
-    margin-bottom: 20px;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    font-size: 1rem;
-    transition: border-color 0.3s, box-shadow 0.3s;
+
+  .new-product-container input[type="text"],
+  .new-product-container input[type="number"],
+  .new-product-container input[type="date"] {
+    width: 100%; /* Ocupa todo el ancho disponible */
   }
-  
-  .container input:focus {
-    border-color: #4dabf7;
-    box-shadow: 0 0 0 3px rgba(77, 171, 247, 0.2);
-    outline: none;
+
+  .button-container {
+    text-align: center; /* Centra el botón */
   }
-  
-  .container input::placeholder {
-    color: #adb5bd;
+
+  .new-product-container button.add-button {
+    width: 100%; /* Botón ocupa todo el ancho */
   }
-  
-  .container button {
-    width: 100%;
-    padding: 12px;
-    background-color: #4dabf7;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.3s, transform 0.2s;
-  }
-  
-  .container button:hover {
-    background-color: #339af0;
-    transform: translateY(-2px);
-  }
-  
-  .container button:active {
-    transform: translateY(0);
-  }
-  
-  /* Responsive adjustments */
-  @media (max-width: 768px) {
-    .container {
-      padding: 20px;
-      margin: 15px;
-    }
-  }
-  
+}

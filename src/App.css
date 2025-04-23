@@ -1,7 +1,120 @@
-.hero{
-    height: 100vh;
-    width: 100vw;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
+/* src/Styles/App.css */
+
+.app-container {
+  max-width: 1200px; /* O el ancho máximo que prefieras */
+  margin: 0 auto;
+  padding: 20px;
+  font-family: sans-serif; /* O la fuente que uses */
+  display: flex; /* Usa flexbox para el layout general */
+  flex-direction: column; /* Apila header, main, footer */
+  min-height: 100vh; /* Asegura que ocupe al menos toda la altura de la pantalla */
+}
+
+.app-container header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #eee;
+  flex-shrink: 0; /* Evita que el header se encoja */
+}
+
+.app-container header h1 {
+  margin: 0;
+  font-size: 1.8rem;
+  color: #333;
+}
+
+main {
+  flex-grow: 1; /* Permite que el contenido principal crezca y empuje el footer hacia abajo */
+}
+
+.main-nav { /* Cambiamos el style a una clase */
+  display: flex;
+  flex-wrap: wrap; /* Permite que los botones bajen */
+  justify-content: center;
+  gap: 10px; /* Espacio reducido entre botones */
+  margin-bottom: 30px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #eee;
+}
+
+.nav-button {
+  padding: 8px 15px; /* Ligeramente más pequeño */
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background: #f9f9f9;
+  cursor: pointer;
+  font-size: 0.9rem; /* Ligeramente más pequeño */
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+  text-align: center;
+  flex-grow: 1; /* Permite que los botones crezcan un poco */
+  flex-basis: auto; /* Base automática para que flex-grow funcione bien */
+}
+
+.nav-button:hover {
+  background-color: #eee;
+}
+
+.nav-button.active { /* Clase para el botón activo */
+  background: #4dabf7;
+  color: white;
+  border-color: #4dabf7;
+  font-weight: bold;
+}
+
+.main-content {
+  /* Estilos para el contenedor principal si son necesarios */
+  margin-top: 20px; /* Añade espacio sobre el contenido */
+}
+
+.app-container footer {
+    margin-top: 40px; /* Empuja el footer hacia abajo */
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+    text-align: center;
+    font-size: 0.9rem;
+    flex-shrink: 0; /* Evita que el footer se encoja */
+}
+
+.app-container footer a {
+    color: #4dabf7;
+    text-decoration: none;
+}
+.app-container footer a:hover {
+    text-decoration: underline;
+}
+
+/* Ajustes responsivos adicionales */
+@media (max-width: 768px) {
+    .app-container header h1 {
+        font-size: 1.5rem;
+    }
+    .main-nav {
+        gap: 8px;
+    }
+    .nav-button {
+        font-size: 0.85rem;
+        padding: 6px 12px;
+        flex-grow: 0; /* Evita que crezcan demasiado en móvil */
+    }
+}
+
+@media (max-width: 480px) {
+    .app-container {
+        padding: 10px;
+    }
+    .app-container header {
+        flex-direction: column; /* Apila título y botón de auth */
+        align-items: center;
+        gap: 10px;
+    }
+    .main-nav {
+        justify-content: space-around; /* Distribuye mejor los botones */
+    }
+    .nav-button {
+        /* Opcional: hacer que ocupen más ancho si son pocos */
+        /* flex-basis: 45%; */
+    }
+}

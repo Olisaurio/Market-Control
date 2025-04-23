@@ -1,98 +1,104 @@
-import { useEffect, useState } from 'react'
-import { ListProducts } from './components/ListProducts'
-import { NewProduct } from './components/NewProduct'
+
+import React, { useState } from 'react';
+import { useAuth } from './Context/AuthContext';
+import { Auth } from './components/Auth';
+import { NewProduct } from './components/NewProduct';
+import { ListProducts } from './components/ListProducts';
 import { StoreSelector } from './components/StoreSelector';
-import './App.css'
-import "./Styles/ListProducts.css"
-import "./Styles/NewProduct.css"
-import "./Styles/StoreSelector.css"
-import "./Styles/CategorySelector.css"
+import { CategorySelector } from './components/CategorySelector';
+import { PriceComparison } from './components/PriceComparison';
+import { MonthlySummary } from './components/MonthlySummary';
 
-export const App = () =>{
-  return (
-    <div className='hero'>
-    <NewProduct/>
-    <ListProducts/>
+// Importa los estilos CSS específicos de los componentes
+import "./Styles/ListProducts.css";
+import "./Styles/NewProduct.css";
+import "./Styles/StoreSelector.css";
+import "./Styles/CategorySelector.css";
+// Importa los nuevos estilos de App
+import './App.css'; // <-- Asegúrate que la ruta sea correcta
 
+// Ya no necesitas los estilos en línea para la navegación aquí
 
-    </div>
-  )
-  /*const [NameProduct, SetNameProduct] = useState("")
-  const [PriceProduct, SetPriceProduct] = useState(0)
-  const [DateProduct, SetDateProduct] = useState("")
-  const [products, SetProducts] = useState([])
-  const [total, setTotal] = useState(0)
+export const App = () => {
+  const { currentUser, loading } = useAuth();
+  const [activeView, setActiveView] = useState('list'); // 'list', 'add', 'stores', 'categories', 'compare', 'summary'
 
-
-  const handleProduct = (e) => {
-    e.preventDefault()
-    const newProduct = {
-      name:NameProduct,
-      price:PriceProduct,
-      date:DateProduct
-    }
-
-    SetProducts([...products,newProduct])
-    SetNameProduct("")
-    SetPriceProduct(0)
-    SetDateProduct("")
-
-
-    products.map((product) => {
-      setTotal( PriceProduct + product.price)})
-
+  if (loading) {
+      return <div>Cargando aplicación...</div>;
   }
 
-
-  
   return (
+      // Usa la clase del contenedor principal definida en App.css
+      <div className="app-container">
+          <header>
+              <h1>Mi Lista de Mercado</h1>
+              {/* El componente Auth se mostrará aquí si el usuario está logueado */}
+              {currentUser && <Auth />}
+          </header>
 
-    
-    <hero>
+          {currentUser ? (
+              <main>
+                  {/* Usa className en lugar de style para la navegación */}
+                  <nav className="main-nav">
+                      <button
+                          className={`nav-button ${activeView === 'list' ? 'active' : ''}`}
+                          onClick={() => setActiveView('list')}
+                      >
+                          Ver Productos
+                      </button>
+                      <button
+                          className={`nav-button ${activeView === 'add' ? 'active' : ''}`}
+                          onClick={() => setActiveView('add')}
+                      >
+                          Añadir Producto
+                      </button>
+                      <button
+                          className={`nav-button ${activeView === 'stores' ? 'active' : ''}`}
+                          onClick={() => setActiveView('stores')}
+                      >
+                          Gestionar Tiendas
+                      </button>
+                      <button
+                          className={`nav-button ${activeView === 'categories' ? 'active' : ''}`}
+                          onClick={() => setActiveView('categories')}
+                      >
+                          Gestionar Categorías
+                      </button>
+                      <button
+                          className={`nav-button ${activeView === 'compare' ? 'active' : ''}`}
+                          onClick={() => setActiveView('compare')}
+                      >
+                          Comparar Precios
+                      </button>
+                      <button
+                          className={`nav-button ${activeView === 'summary' ? 'active' : ''}`}
+                          onClick={() => setActiveView('summary')}
+                      >
+                          Resumen Mensual
+                      </button>
+                  </nav>
 
-    <form className="container"  onSubmit={handleProduct}>
-
-      <h2>Agregar producto</h2>
-
-      <input type="text" placeholder='Producto'  
-      
-      onChange={(event) => SetNameProduct(event.target.value)}
-      value={NameProduct}
-      />
-
-      <input type="num" placeholder='Precio'
-      
-      onChange={(event) => SetPriceProduct(Number(event.target.value))}
-      value={PriceProduct}/>
-
-      <input type="date"
-      
-      onChange={(event) => SetDateProduct(event.target.value)}
-      value={DateProduct}/>
-
-      <button>Agregar al carrito</button>
-    </form>
-
-    <div className="aside">
-    <h2>lista de productos</h2>
-
-    <ul>
-    
-{products.map((product, index)=>(
-  <li key={product + index}>
-    <p>{product.name}<br/>${product.price}</p>
-  </li>
-)
-
-)}
-
-    </ul>
-    <h2>Total</h2>
-    <h3>${total}</h3>
-    </div>
-
-    </hero>
-  )*/
-}
-
-export default App
+                  <div className="main-content">
+                      {activeView === 'list' && <ListProducts />}
+                      {activeView === 'add' && <NewProduct />}
+                      {activeView === 'stores' && <StoreSelector />}
+                      {activeView === 'categories' && <CategorySelector />}
+                      {activeView === 'compare' && <PriceComparison />}
+                      {activeView === 'summary' && <MonthlySummary />}
+                  </div>
+              </main>
+          ) : (
+              // --- Usuario NO LOGUEADO ---
+              // Muestra solo el componente Auth si no hay usuario
+              // Puedes envolverlo en un div con clase si necesitas estilos específicos
+              <div className="auth-container"> {/* Ejemplo de clase */}
+                  <Auth />
+              </div>
+          )}
+          <footer>
+              {/* El enlace de ayuda que agregaste */}
+              <a href="mailto:soporte@tuapp.com?subject=Solicitud de Soporte App">¿Necesitas Ayuda?</a>
+          </footer>
+      </div>
+  );
+};

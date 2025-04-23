@@ -1,66 +1,137 @@
+/* src/Styles/CategorySelector.css */
+:root {
+  /* Reutilizar o definir variables si es necesario */
+  --primary-color: #4caf50; /* Verde para añadir */
+  --danger-color: #ff5252; /* Rojo para eliminar */
+  --light-gray-color: #f1f3f5;
+  --medium-gray-color: #ced4da;
+  --dark-gray-color: #868e96;
+  --text-color: #343a40;
+  --container-bg: #ffffff;
+  --border-radius: 6px;
+  --box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+}
+
 .category-selector {
-    margin-bottom: 20px;
-    padding: 15px;
-    background-color: #f9f9f9;
-    border-radius: 5px;
-  }
-  
-  .category-controls {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-top: 15px;
-  }
-  
+  background-color: var(--container-bg);
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  padding: 20px 25px;
+  margin: 20px auto;
+  max-width: 500px; /* Ancho máximo */
+  border: 1px solid var(--light-gray-color);
+}
+
+.category-selector h3 { /* Asumiendo que usas h3 */
+  color: var(--text-color);
+  text-align: center;
+  margin-top: 0;
+  margin-bottom: 20px;
+  font-size: 1.3rem;
+  font-weight: 600;
+  border-bottom: 1px solid var(--light-gray-color);
+  padding-bottom: 10px;
+}
+
+.category-controls {
+  display: flex;
+  flex-direction: column; /* Apilado por defecto */
+  gap: 15px; /* Espacio entre elementos */
+  margin-top: 15px;
+}
+
+.category-select-container {
+  display: flex;
+  flex-direction: column; /* Apilado por defecto */
+  gap: 10px; /* Espacio entre select y botón eliminar */
+}
+
+.category-select {
+  flex-grow: 1; /* Ocupa espacio disponible */
+  padding: 10px 12px;
+  border-radius: var(--border-radius);
+  border: 1px solid var(--medium-gray-color);
+  background-color: white;
+  font-size: 0.95rem;
+}
+
+.delete-category-button,
+.add-category-modal-button {
+  padding: 10px 15px;
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+  text-align: center;
+}
+
+.delete-category-button {
+  background-color: var(--danger-color);
+  color: white;
+}
+
+.delete-category-button:hover {
+  background-color: #e53935; /* Rojo más oscuro */
+  transform: translateY(-1px);
+}
+
+.delete-category-button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.add-category-modal-button {
+  background-color: var(--primary-color);
+  color: white;
+  align-self: stretch; /* Ocupa todo el ancho en el contenedor flex */
+}
+
+.add-category-modal-button:hover {
+  background-color: #43a047; /* Verde más oscuro */
+  transform: translateY(-1px);
+}
+
+.no-categories-message {
+  color: var(--dark-gray-color);
+  font-style: italic;
+  margin-top: 15px;
+  text-align: center;
+  background-color: var(--light-gray-color);
+  padding: 10px;
+  border-radius: var(--border-radius);
+}
+
+.selected-category-info {
+  margin-top: 15px;
+  color: var(--text-color);
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.category-warning {
+  color: var(--danger-color);
+  margin-bottom: 10px;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+/* Media Query para pantallas más grandes (ej. > 600px) */
+@media (min-width: 600px) {
   .category-select-container {
-    display: flex;
-    gap: 10px;
+    flex-direction: row; /* Lado a lado en pantallas grandes */
+    align-items: center; /* Alinear verticalmente */
   }
-  
-  .category-select {
-    flex-grow: 1;
-    padding: 8px;
-    border-radius: 4px;
-    border: 1px solid #ddd;
-    background-color: white;
-  }
-  
+
   .delete-category-button {
-    background-color: #ff5252;
-    color: white;
-    border: none;
-    padding: 8px 15px;
-    border-radius: 4px;
-    cursor: pointer;
+     /* Ajusta el ancho si es necesario, o deja que se ajuste al contenido */
+     flex-shrink: 0; /* Evita que se encoja */
   }
-  
-  .delete-category-button:disabled {
-    background-color: #cccccc;
-    cursor: not-allowed;
-  }
-  
+
   .add-category-modal-button {
-    background-color: #4caf50;
-    color: white;
-    border: none;
-    padding: 8px 15px;
-    border-radius: 4px;
-    cursor: pointer;
-    align-self: flex-end;
+    align-self: flex-end; /* Alinea a la derecha en pantallas grandes */
+    width: auto; /* Ancho automático */
   }
-  
-  .no-categories-message {
-    color: #757575;
-    font-style: italic;
-    margin-top: 10px;
-  }
-  
-  .selected-category-info {
-    margin-top: 10px;
-    color: #333;
-  }
-  
-  .category-warning {
-    color: #ff5252;
-    margin-bottom: 10px;
-  }
+}
