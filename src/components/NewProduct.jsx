@@ -2,6 +2,8 @@ import React, { useContext, useEffect } from 'react';
 import { ContextMarket } from '../Context/Context';
 import md5 from 'md5';
 import { CategorySelector } from './CategorySelector ';
+import { StoreSelector } from './StoreSelector';
+
 
 export const NewProduct = () => {
     const {
@@ -123,6 +125,8 @@ export const NewProduct = () => {
         <>
             <form className="container" onSubmit={handleProduct}>
                 <h2>{editingProduct ? 'Actualizar producto' : 'Agregar producto'}</h2>
+
+                <StoreSelector />
                 
                 <CategorySelector />
                 

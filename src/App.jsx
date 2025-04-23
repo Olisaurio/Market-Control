@@ -12,7 +12,6 @@ export const App = () =>{
   return (
     <div className='hero'>
     <NewProduct/>
-    <StoreSelector />
     <ListProducts/>
 
 

@@ -1,106 +1,66 @@
+.store-selector {
+  margin-bottom: 20px;
+  padding: 15px;
+  background-color: #f9f9f9;
+  border-radius: 5px;
+}
 
-.add-store-form {
+.store-controls {
   display: flex;
-  margin-bottom: 15px;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.store-select-container {
+  display: flex;
   gap: 10px;
 }
 
-.store-input {
+.store-select {
   flex-grow: 1;
-  padding: 10px;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  font-size: 0.95rem;
-  transition: border-color 0.3s, box-shadow 0.3s;
-}
-
-.store-input:focus {
-  border-color: #4dabf7;
-  box-shadow: 0 0 0 3px rgba(77, 171, 247, 0.2);
-  outline: none;
-}
-
-.add-store-button {
-  padding: 10px 15px;
-  background-color: #4dabf7;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.add-store-button:hover {
-  background-color: #339af0;
-}
-
-/* Estilos para los mensajes */
-.error-message {
-  background-color: #ffe3e3;
-  color: #e03131;
-  padding: 10px;
-  border-radius: 8px;
-  margin-bottom: 15px;
-  font-size: 0.9rem;
-}
-
-.success-message {
-  background-color: #e6f7e9;
-  color: #2b8a3e;
-  padding: 10px;
-  border-radius: 8px;
-  margin-bottom: 15px;
-  font-size: 0.9rem;
-}
-
-.no-stores-message {
-  text-align: center;
-  color: #868e96;
-  font-style: italic;
-  padding: 15px;
-  background-color: #f8f9fa;
-  border-radius: 8px;
-}
-
-/* Modificación de los items de tienda */
-.store-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0;
-  overflow: hidden;
-}
-
-.store-name {
-  padding: 10px 15px;
-  flex-grow: 1;
-  cursor: pointer;
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  background-color: white;
 }
 
 .delete-store-button {
-  background-color: transparent;
-  color: #868e96;
+  background-color: #ff5252;
+  color: white;
   border: none;
-  padding: 10px 15px;
-  font-size: 1.2rem;
-  font-weight: bold;
+  padding: 8px 15px;
+  border-radius: 4px;
   cursor: pointer;
-  transition: all 0.2s;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
-.delete-store-button:hover {
-  background-color: #ff6b6b;
+.delete-store-button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.add-store-modal-button {
+  background-color: #4caf50;
   color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  align-self: flex-end;
 }
 
-.store-item.selected .delete-store-button {
-  color: white;
+.no-stores-message {
+  color: #757575;
+  font-style: italic;
+  margin-top: 10px;
 }
 
-.store-item.selected .delete-store-button:hover {
-  background-color: #fa5252;
+.selected-store-info {
+  margin-top: 10px;
+  color: #333;
+}
+
+.store-warning {
+  color: #ff5252;
+  margin-bottom: 10px;
 }
